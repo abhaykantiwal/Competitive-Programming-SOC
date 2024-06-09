@@ -1,0 +1,81 @@
+Problem - Valid Palindrome
+problem link - https://neetcode.io/problems/is-palindrome
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        if(nums.size()==0){
+            return 0;
+        }
+        set<int>s(nums.begin(),nums.end());
+        int n = s.size(); 
+        vector<int>unique(n);
+        int i=0;
+        for(auto it = s.begin();it!=s.end();it++){
+            unique[i]=*it;
+            i++;
+        }
+        int maxlen = 1; 
+        int temp = 1; 
+        for(int j=0;j<n-1;j++){
+            if(unique[j]+1==unique[j+1]){
+                temp++; 
+            } 
+            else{
+                if(temp>maxlen){
+                    maxlen = temp;
+                } 
+                temp = 1; 
+            }
+        } 
+        if(temp>maxlen){
+            maxlen = temp;
+        }
+        return maxlen; 
+    } 
+};
+
+
+Problem - Two Sum (Input Array is Sorted)
+problem link - https://neetcode.io/problems/two-integer-sum-ii
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        unordered_map<int,int> a;
+        for(int i = 0;i < numbers.size();i++)
+        {
+            if(a.find(target - numbers[i]) != a.end())
+            {
+                return {a[target - numbers[i]]+1, i+1};
+            }
+            a[numbers[i]] = i;
+        }
+        return {0,0};
+    }
+};
+
+
+Problem - Container with Most Water
+problem link - https://neetcode.io/problems/max-water-container
+class Solution {
+public:
+    int maxArea(vector<int>& heights) {
+        int n = heights.size();
+        int left =0;
+        int right = n-1;
+        int area = 0;
+        while(left<right){
+            int temparea =  (right-left)*(min(heights[left], heights[right]));
+            if(temparea>area){
+                area = temparea;
+            }
+            if(heights[left]<=heights[right]){
+                left++;
+            }
+            else{
+                right--;
+            }
+        }
+        return area;
+    }
+};
+
