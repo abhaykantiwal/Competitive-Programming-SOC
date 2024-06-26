@@ -1,0 +1,445 @@
+Problem- Reverse a linked list
+problem link - https://neetcode.io/problems/reverse-a-linked-list
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:       
+    ListNode* reverseList(ListNode* head) {
+        ListNode* curr = head; 
+        ListNode* prev = nullptr;
+        ListNode* next = nullptr;
+        if(curr==nullptr|| curr->next==nullptr){
+            return head;
+        }  
+        while(curr!=nullptr){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        } 
+        head = prev;
+        return head;
+    }
+};
+
+
+Problem - Merge Two Sorted linked lists
+problem link - https://neetcode.io/problems/merge-two-sorted-linked-lists
+
+
+Problem - Reorder Linked list
+problem link -  https://neetcode.io/problems/reorder-linked-list
+// /**
+//  * Definition for singly-linked list.
+//  * struct ListNode {
+//  *     int val;
+//  *     ListNode *next;
+//  *     ListNode() : val(0), next(nullptr) {}
+//  *     ListNode(int x) : val(x), next(nullptr) {}
+//  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+//  * };
+//  */
+
+// class Solution {
+// public:   
+//     ListNode* deepCopy(ListNode* head) {
+//         if (!head) return nullptr;
+//         ListNode* newHead = new ListNode(head->val);
+//         ListNode* current = newHead;
+//         ListNode* original = head->next;
+//         while (original) {
+//             current->next = new ListNode(original->val);
+//             current = current->next;
+//             original = original->next;
+//         }
+//         return newHead;
+//     }
+
+//     void reorderList(ListNode* head) {
+//         if(head==nullptr|| head->next==nullptr||head->next->next == nullptr){
+//             return;
+//         }  
+//         ListNode* deepcopynode = deepCopy(head);
+//         // below three nodes for reverse purpose
+//         ListNode* curr = head;    
+//         ListNode* prev = nullptr;
+//         ListNode* next = nullptr;  
+//         // reversing logic
+//         while(curr!=nullptr){
+//             next = curr->next;
+//             curr->next = prev;
+//             prev = curr;
+//             curr = next;
+//         }
+//         // reversed contain reversed linkedlist down 
+//         ListNode* reversed = prev;
+//         ListNode* temp = reversed;
+//         // calculating length of linked list
+//         temp = deepcopynode;
+//         int len = 0; 
+//         curr = temp;  
+//         while(curr!=nullptr){
+//             len++;
+//             curr = curr->next;
+//         }  
+//         // final re- order logic
+//         ListNode* reordered = new ListNode(temp->val);  // reordered shall contained final linked list and shall be assigned to head in last 
+//         ListNode* temp_reordered = reordered;  // temporary pointer to reordered, so that reordered remain the head after complete operation
+//         temp = temp->next;  
+//         if(len%2==1){  
+//             for(int i=0;i<len/2;i++){
+//                 temp_reordered->next = reversed; 
+//                 temp_reordered = temp_reordered->next; 
+//                 reversed = reversed->next;
+//                 temp_reordered->next = temp;
+//                 temp = temp->next; 
+//                 temp_reordered = temp_reordered->next;
+//             }  
+//             temp_reordered->next = nullptr;
+//             head = reordered;   // reordered is assigned to head finally as asked
+//         } 
+//         else{
+//             len = len-1;  
+//             for(int i=0;i<len/2;i++){
+//                 temp_reordered->next = reversed; 
+//                 temp_reordered = temp_reordered->next; 
+//                 reversed = reversed->next;
+//                 temp_reordered->next = temp;
+//                 temp = temp->next; 
+//                 temp_reordered = temp_reordered->next;
+//             } 
+//             temp_reordered->next = reversed;
+//         }  
+//     }   
+// };
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deepCopy(ListNode* head) {
+        if (!head) return nullptr;
+        ListNode* newHead = new ListNode(head->val);
+        ListNode* current = newHead;
+        ListNode* original = head->next;
+        while (original) {
+            current->next = new ListNode(original->val);
+            current = current->next;
+            original = original->next;
+        }
+        return newHead;
+    }
+    void reorderList(ListNode* head) {
+        if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+            return;
+        }
+        // Create a deep copy of the original list
+        ListNode* deepcopynode = deepCopy(head);
+        // Reverse the original list
+        ListNode* curr = head;
+        ListNode* prev = nullptr;
+        ListNode* next = nullptr;
+        while (curr != nullptr) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        ListNode* reversed = prev;
+        // Calculate the length of the linked list using the deep copy
+        int len = 0;
+        curr = deepcopynode;
+        while (curr != nullptr) {
+            len++;
+            curr = curr->next;
+        }
+        // Reorder the list
+        ListNode dummy(0);
+        ListNode* temp_reordered = &dummy;
+        ListNode* orig_curr = deepcopynode;
+
+        for (int i = 0; i < len / 2; i++) {
+            temp_reordered->next = orig_curr;
+            orig_curr = orig_curr->next;
+            temp_reordered = temp_reordered->next;
+
+            temp_reordered->next = reversed;
+            reversed = reversed->next;
+            temp_reordered = temp_reordered->next;
+        }
+        // If the length is odd, append the remaining middle element
+        if (len % 2 != 0) {
+            temp_reordered->next = orig_curr;
+            temp_reordered = temp_reordered->next;
+        }
+        temp_reordered->next = nullptr;
+        // Update the head to point to the reordered list
+        head->val = dummy.next->val;
+        head->next = dummy.next->next;
+    }
+};
+
+
+Problem - Remove node from end of linked list
+problem link - https://neetcode.io/problems/remove-node-from-end-of-linked-list
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        if(head->next==nullptr){
+            head = nullptr;
+            return head;
+        } 
+        ListNode* curr = head;
+        int len =0;
+        while(curr!=nullptr){
+            len++;
+            curr = curr->next;
+        }
+        int pos = len-n+1;
+        if(pos==1){
+            ListNode* tempfirst = head;
+            head = head->next;
+            delete tempfirst;
+            return head;
+        }
+        curr = head;
+        if(n==1){ 
+            while(curr->next->next!=nullptr){
+                curr = curr->next;
+            }
+            ListNode* templast = curr->next;
+            curr->next = nullptr;
+            delete templast;
+            return head;
+        } 
+        for(int i=1;i<pos-1;i++){
+            curr = curr->next;
+        } 
+        ListNode* midtemp = curr->next;
+        curr->next = curr->next->next;
+        delete midtemp;
+        return head;
+    }
+};
+
+
+Problem - Add two numbers
+problem link - https://neetcode.io/problems/add-two-numbers
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        int carry = 0; 
+        int temp = l1->val + l2->val+carry;
+        ListNode* newlist = new ListNode(temp%10); 
+        if(temp>9){
+            carry=1;
+        }  
+        ListNode* curr = newlist;
+        l1 = l1->next; 
+        l2 = l2->next;
+        while(l1!=nullptr && l2!=nullptr){
+           int temp = l1->val + l2->val+carry;
+           curr->next = new ListNode(temp%10);
+           if(temp>9){
+                carry = 1;
+           }
+           else{
+            carry = 0;
+           } 
+           curr = curr->next;
+           l1 = l1->next;
+           l2 = l2->next;
+        }
+        if(l2==nullptr){
+            while(l1!=nullptr){
+                temp = l1->val + carry;
+                curr->next = new ListNode(temp%10);
+                if(temp>9){
+                    carry = 1;
+                }
+                else{
+                    carry = 0;
+                } 
+                curr = curr->next;
+                l1 = l1->next;
+            }
+            if(carry==1){
+                curr->next = new ListNode(carry);
+                curr = curr->next;
+            }
+            return newlist;
+        }
+        if(l1==nullptr){
+            while(l2!=nullptr){
+                temp = l2->val + carry;
+                curr->next = new ListNode(temp%10);
+                if(temp>9){
+                    carry = 1;
+                }
+                else{
+                    carry = 0;
+                } 
+                curr = curr->next;
+                l2 = l2->next;
+            }
+            if(carry==1){
+                curr->next = new ListNode(carry);
+                curr = curr->next;
+            }
+            return newlist;
+        }
+        if(carry==1){
+            curr->next = new ListNode(carry);
+            curr = curr->next;
+        }
+        return newlist;
+    }
+};
+
+
+Problem -  Linked list cycle detection
+problem link - https://neetcode.io/problems/linked-list-cycle-detection
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while(fast!=nullptr&&fast->next!=nullptr){
+            fast = fast->next->next;
+            slow = slow->next;
+            if(fast==slow){
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+// another way is 
+// take maxval = maxlen+1;
+// for(int i=0;i<maxval;i++){
+//     if(curr==!nullptr){
+//         return false;
+//     }
+// }
+// return true;
+
+
+Problem - Find duplicate integer
+problem link - https://neetcode.io/problems/find-duplicate-integer
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int slow = 0;
+        int fast = 0;
+        while(true){
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+            if(slow==fast){
+                break;
+            }
+        }
+        int newslow = 0;
+        while(fast!=newslow){
+            fast = nums[fast];
+            newslow = nums[newslow];
+        } 
+        return fast;
+    }  
+};  
+
+
+Problem - Merge K sorted linked list
+problem link - https://neetcode.io/problems/merge-k-sorted-linked-lists
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if(lists.size()==0){
+            return nullptr;
+        } 
+        if(lists.size()==1){
+            return lists[0];
+        } 
+        int n = lists.size();
+        vector<int>vec;  
+        ListNode* curr;
+        for(int i=0;i<n;i++){ 
+            if(lists[i]==nullptr){
+                continue;
+            }  
+            curr = lists[i];
+            while(curr!=nullptr){
+                vec.push_back(curr->val);
+                curr = curr->next;
+            }
+        } 
+        sort(vec.begin(),vec.end());
+        ListNode* sol = new ListNode(vec[0]);
+        ListNode* first = sol;
+        n = vec.size();
+        for(int i=1;i<n;i++){
+            first->next = new ListNode(vec[i]);
+            first = first->next;
+        }  
+        return sol;
+    }
+};
+
