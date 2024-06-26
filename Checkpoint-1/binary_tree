@@ -1,0 +1,464 @@
+Problem - Inverse a binary tree
+problem link - https://neetcode.io/problems/invert-a-binary-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(root!=nullptr){
+            TreeNode* temp = root->left;
+            root->left = root->right;
+            root->right = temp;
+            invertTree(root->left);
+            invertTree(root->right);
+        } 
+        return root;
+    }
+};
+
+
+Problem - Depth of binary tree
+problem link - https://neetcode.io/problems/depth-of-binary-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root==nullptr){
+            return 0;
+        }
+        int depth = 1;
+        depth =depth + max(maxDepth(root->left), maxDepth(root->right));
+        return depth; 
+    }  
+}; 
+
+
+Problem - Binary tree diameter
+problem link - https://neetcode.io/problems/binary-tree-diameter
+// /**
+//  * Definition for a binary tree node.
+//  * struct TreeNode {
+//  *     int val;
+//  *     TreeNode *left;
+//  *     TreeNode *right;
+//  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+//  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+//  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+//  * };
+//  */
+
+// class Solution {
+// public:
+//     int height(TreeNode* root){
+//         if(root==NULL){
+//             return 0;
+//         }
+//         return (1+max(height(root->left), height(root->right)));
+//     }
+//     int diameterOfBinaryTree(TreeNode* root) {
+//         if(root==NULL){
+//             return 0;
+//         }
+//         int leftheight = height(root->left);
+//         int rightheight = height(root->right);
+//         int leftdiameter = diameterOfBinaryTree(root->left);
+//         int rightdiameter = diameterOfBinaryTree(root->right);
+//         return max((leftheight+rightheight), max(leftdiameter, rightdiameter));
+//     }  
+// };
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:     
+    int newfunc(TreeNode* root, int *h){
+        int lh = 0;
+        int rh = 0;
+        if(!root){
+            *h = 0;
+            return 0;
+        }
+        int ldiameter = newfunc(root->left,&lh);
+        int rdiameter = newfunc(root->right,&rh);
+        *h = max(lh,rh)+1;
+        return max(lh+rh,max(ldiameter, rdiameter));
+    }
+    int diameterOfBinaryTree(TreeNode* root) {
+        int height;
+        return newfunc(root, &height);
+    }
+};
+
+
+Problem - balanced binary tree
+problem link - https://neetcode.io/problems/balanced-binary-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public: 
+    int checkHeight(TreeNode* root){
+        if(!root){
+            return 0;
+        }
+        int leftheight = checkHeight(root->left);
+        if(leftheight==-1){
+            return -1;
+        }  
+        int rightheight = checkHeight(root->right);
+        if(rightheight==-1){
+            return -1;
+        }
+        if(abs(leftheight-rightheight)>1){
+            return -1;
+        }
+        return (1+max(leftheight,rightheight));
+    }
+    bool isBalanced(TreeNode* root) {
+        return checkHeight(root)!=-1;
+    }  
+};
+
+
+Problem - Same binary tree
+problem link - https://neetcode.io/problems/same-binary-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if(p==nullptr||q==nullptr){
+            if(p==nullptr&& q==nullptr){
+                return true;
+            }
+            else{
+                return false;
+            }  
+        }  
+        if(p->val==q->val){ 
+            if(!isSameTree(p->left,q->left)){
+                return false;
+            } 
+            if(!isSameTree(p->right,q->right)){
+                return false;
+            }
+        } 
+        else{
+            return false;
+        }
+        return true;
+    }
+};
+
+
+Problem - subtree of a binary tree
+problem link - https://neetcode.io/problems/subtree-of-a-binary-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool sameTree(TreeNode* root, TreeNode* subRoot){
+        if(!root || !subRoot){
+            if(!root && !subRoot){
+                return true;
+            } 
+            else{
+                return false;
+            }
+        }
+        if(root->val==subRoot->val){
+            if(!sameTree(root->left, subRoot->left)){
+                return false;
+            }
+            if(!sameTree(root->right, subRoot->right)){
+                return false;
+            } 
+        }
+        else{
+            return false;
+        }  
+        return true; 
+    }  
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        if(!subRoot){
+            return true;
+        }  
+        if(!root){
+            return false;
+        }  
+        if(sameTree(root,subRoot)){
+            return true;
+        } 
+        return isSubtree(root->left, subRoot)|| isSubtree(root->right, subRoot);
+        //  CAN WRITE FOLLOWING CODE ALSO RATHER THAN ABOVE
+        // else{
+        //     if(isSubtree(root->left,subRoot)){
+        //         return true;
+        //     }
+        //     if(isSubtree(root->right,subRoot)){
+        //         return true;
+        //     }
+        // }
+        // return false;
+    }
+};
+
+
+Problem - Lowest Common ancestor
+problem link - https://neetcode.io/problems/lowest-common-ancestor-in-binary-search-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(p->val<root->val && q->val<root->val){
+            return lowestCommonAncestor(root->left, p,q);
+        }
+        else if(p->val>root->val && q->val>root->val){
+            return lowestCommonAncestor(root->right, p,q);
+        }
+        else{
+            return root;
+        } 
+    }
+};
+
+
+Problem - Level order traversal of binary tree
+problem link - https://neetcode.io/problems/level-order-traversal-of-binary-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>ans;
+        if(!root){
+            return ans;
+        }    
+        queue<TreeNode*> emptyq;
+        queue<TreeNode*> q;
+        q.push(root);  
+        queue<TreeNode*> vec;
+        vector<int>temp;
+        temp.push_back(root->val);
+        ans.push_back(temp);
+        temp.clear();
+        while(!q.empty()){ 
+            if(q.front()->left){
+                 vec.push(q.front()->left);
+                 temp.push_back(q.front()->left->val);
+            }
+            if(q.front()->right){
+                vec.push(q.front()->right);
+                temp.push_back(q.front()->right->val);
+            } 
+            if(q.size()==1){
+                if(vec.size()!=0){
+                    ans.push_back(temp);
+                    temp.clear();
+                    q.pop();
+                    q = vec; 
+                    vec = emptyq;
+                }
+                else{
+                    break;
+                }
+            }
+            else{
+                q.pop(); 
+            }
+        }
+        return ans;
+    }
+};
+
+
+Problem - Binary tree right side view
+problem link - https://neetcode.io/problems/binary-tree-right-side-view
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {  
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int>sol;
+        vector<vector<int>>ans;
+        if(!root){
+            return sol;
+        } 
+        queue<TreeNode*> emptyq;
+        queue<TreeNode*>q; 
+        queue<TreeNode*>nextlevel;
+        vector<int> temp;
+        q.push(root);
+        temp.push_back(root->val);
+        ans.push_back(temp);
+        temp.clear();
+        while(!q.empty()){  
+            if(q.front()->left){
+                nextlevel.push(q.front()->left);
+                temp.push_back(q.front()->left->val);
+            }
+            if(q.front()->right){
+                nextlevel.push(q.front()->right);
+                temp.push_back(q.front()->right->val);
+            }
+            if(q.size()==1){ 
+                if(!nextlevel.empty()){
+                    ans.push_back(temp);
+                    temp.clear();
+                    q.pop();
+                    q = nextlevel;
+                    nextlevel = emptyq;
+                }
+                else{
+                    break;
+                }
+            } 
+            else{
+                q.pop();
+            }
+        }
+        int t = ans.size();
+        for(int i=0;i<t;i++){
+            int n = ans[i].size();
+            sol.push_back(ans[i][n-1]);
+        }   
+        return sol;
+    }
+};
+
+Problem - Count good nodes in a binary tree
+problem link - https://neetcode.io/problems/count-good-nodes-in-binary-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public: 
+    int count = 1;
+    void dfs(TreeNode* root, int maxval){
+        if(!root){
+            return;
+        } 
+        if(root->left){
+            if(root->left->val>=maxval){
+                count+=1;
+                dfs(root->left,root->left->val);
+            } 
+            else{
+                dfs(root->left, maxval);
+            }
+        }
+        if(root->right){
+            if(root->right->val>=maxval){
+                count+=1; 
+                maxval = root->right->val;
+                dfs(root->right,root->right->val);
+            } 
+            else{ 
+                dfs(root->right, maxval);
+            } 
+        } 
+        return;
+    }
+    int goodNodes(TreeNode* root) {
+        if(!root){
+            return 0;
+        }
+        dfs(root,root->val);
+        return count; 
+    }
+};
